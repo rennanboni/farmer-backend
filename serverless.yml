@@ -1,0 +1,63 @@
+service: farmer-backend
+
+plugins:
+  - serverless-plugin-layer-manager
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'sa-east-1'}
+  memorySize: 128
+  environment:
+    NODE_ENV: ${self:provider.stage}
+
+custom:
+  prefix-name: ${self:service}-${self:provider.stage}
+  layerConfig:
+    installLayers: true
+    exportLayers: true
+    upgradeLayerReferences: true
+
+layers:
+  NodeModules:
+    path: ./layers/general
+    name: ${self:custom.prefix-name}-node-modules-general
+    description: 'General shared node modules'
+    compatibleRuntimes:
+      - nodejs10.x
+      - nodejs12.x
+
+package:
+  individually: true
+  excludeDevDependencies: false
+  exclude:
+    - '.*/**'
+    - '*'
+    - apps/**
+    - coverage/**
+    - dist/**
+    - layers/**
+    - libs/**
+    - src/**
+    - test/**
+    - node_modules/**
+    - reports/**
+
+functions:
+  graphql:
+    name: ${self:custom.prefix-name}-graphql
+    handler: dist/main-aws.handler
+    timeout: 30
+    layers:
+      - {Ref: NodeModulesLambdaLayer}
+    events:
+      - http:
+          path: /graphql
+          method: post
+    package:
+      include:
+        - dist/**
+    tags:
+      project: ${self:service}
+      environment: ${self:provider.stage}

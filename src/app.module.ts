@@ -1,42 +1,34 @@
-import {Module} from '@nestjs/common';
-import {GraphQLModule} from "@nestjs/graphql";
-import {TypeOrmModule} from "@nestjs/typeorm";
-
-import {FarmerResolver} from "./resolver/farmer.resolver";
-
-import {AddressService, DocumentService, FarmerService} from "./service";
-import {AddressRepository, DocumentRepository, FarmerRepository} from "./repository";
-import {Address, Document, Farmer} from "./model";
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AddressModule } from './address/address.module';
+import { DocumentModule } from './document/document.module';
+import { FarmerModule } from './farmer/farmer.module';
 
 @Module({
-    controllers: [],
-    providers: [
-        // Resolvers
-        FarmerResolver,
+  controllers: [],
+  providers: [],
+  imports: [
+    // Graphql
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+      playground: true,
+    }),
 
-        // Services
-        FarmerService, DocumentService, AddressService
-    ],
-    imports: [
-        TypeOrmModule.forRoot( {
-            type: 'postgres',
-            host: process.env.DB_TYPE || 'localhost',
-            port: parseInt(process.env.DB_PORT || '15432'),
-            username: process.env.DB_USERNAME || 'postgres',
-            password: process.env.DB_PASSWORD || 'Postgres2019!',
-            autoLoadEntities: true,
-            synchronize: true
-        }),
-        TypeOrmModule.forFeature([Address, AddressRepository]),
-        TypeOrmModule.forFeature([Document, DocumentRepository]),
-        TypeOrmModule.forFeature([Farmer, FarmerRepository]),
+    // Database connection
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      autoLoadEntities: true,
+      synchronize: process.env.DB_SYNC ? process.env.DB_SYNC === 'true' : true,
+    }),
 
-
-        GraphQLModule.forRoot({
-            autoSchemaFile: true,
-            playground: true
-        }),
-    ],
+    // Modules
+    AddressModule, DocumentModule, FarmerModule,
+  ],
 })
 export class AppModule {
 }

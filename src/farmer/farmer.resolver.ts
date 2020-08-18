@@ -1,7 +1,10 @@
 import {Args, Parent, Query, ResolveField, Resolver} from "@nestjs/graphql";
 
-import {Address, Document, Farmer} from "../model";
-import {AddressService, DocumentService, FarmerService} from "../service";
+import { Farmer } from './farmer.model';
+import { FarmerService } from './farmer.service';
+
+import { Address, AddressService } from '../address';
+import { Document, DocumentService } from '../document';
 
 @Resolver(of => Farmer)
 export class FarmerResolver {
