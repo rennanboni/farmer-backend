@@ -8,6 +8,7 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'sa-east-1'}
+  apiName: ${self:service}-${self:provider.stage}
   memorySize: 128
   environment:
     NODE_ENV: ${self:provider.stage}
@@ -53,8 +54,13 @@ functions:
       - {Ref: NodeModulesLambdaLayer}
     events:
       - http:
-          path: /graphql
+          path: graphql
           method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
     package:
       include:
         - dist/**

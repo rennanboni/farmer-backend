@@ -18,7 +18,7 @@ import { FarmerModule } from './farmer/farmer.module';
     // Database connection
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
+      host: process.env.DB_HOST || 'sandbox-postgres.cbkgywnghdnn.us-east-1.rds.amazonaws.com',
       port: parseInt(process.env.DB_PORT || '5432'),
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',

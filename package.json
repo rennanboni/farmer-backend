@@ -18,7 +18,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "deploy:prod:us-east-1": "sls deploy --stage prod --region us-east-1",
+    "undeploy:prod:us-east-1": "sls remove --stage prod --region us-east-1"
   },
   "dependencies": {
     "@gcoreplus/nestjs-aws-serverless": "^1.0.12",
@@ -28,6 +30,7 @@
     "@nestjs/platform-express": "^7.4.2",
     "@nestjs/typeorm": "^7.1.0",
     "apollo-server-express": "^2.16.1",
+    "aws-serverless-express": "^3.3.8",
     "graphql": "^15.3.0",
     "graphql-tools": "^6.0.18",
     "pg": "^8.3.0",
